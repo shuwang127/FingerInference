@@ -13,19 +13,19 @@ function [ data, gender, age, id ] = readData( datapath, scanner, type )
 
 %% path judgement.
 if ~exist(datapath, 'dir') == 1
-   disp('The dataset path does not exist');
+   disp('The dataset path does not exist.');
    return;
 end
 
 scannerList = {'GreenBit', 'DigitalPersona', 'Orcathus'};
 if ~ismember(scanner, scannerList)
-    disp('The scanner name error');
+    disp('The scanner name error.');
     return;
 end
 
 typeList = {'train', 'test'};
 if ~ismember(type, typeList)
-    disp('The scanner name error');
+    disp('The scanner name error.');
     return;
 end
 
