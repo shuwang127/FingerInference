@@ -1,4 +1,4 @@
-function [ result ] = lbpMapping( lbp_map, P, type )
+function [ lbp_code ] = lbpMapping( lbp_map, P, type )
 % Funct:  Mapping LBP map with different rules, reducing the bin number.
 % Input:  lbp_map - LBP image.
 %         P - the neighbour number.
@@ -6,7 +6,7 @@ function [ result ] = lbpMapping( lbp_map, P, type )
 %                'ri'   for rotation-invariant LBP
 %                'u2'   for uniform LBP
 %                'riu2' for uniform rotation-invariant LBP.
-% Output: result - the converted LBP map.
+% Output: lbp_code - the converted LBP code.
 % Author: Shu Wang, George Mason University.
 % Date:   2019-10-22.
 
@@ -136,11 +136,11 @@ end
 %% Convert the output.
 valmax = max(max(lbp_map_d));
 if (valmax <= intmax('uint8'))
-    result = uint8(lbp_map_d);
+    lbp_code = uint8(lbp_map_d);
 elseif (valmax <= intmax('uint16'))
-    result = uint16(lbp_map_d);
+    lbp_code = uint16(lbp_map_d);
 else
-    result = uint32(lbp_map_d);
+    lbp_code = uint32(lbp_map_d);
 end
 
 end

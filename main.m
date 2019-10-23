@@ -20,6 +20,5 @@ disp('Data Loaded!');
 addpath('./LBP/');
 img = traindata{1};
 lbp_map = lbp(img, 1, 8);
-lbp_map = lbpMapping(lbp_map, 8, 'u2');
-result=hist(result(:),0:(bins-1));
-result=result/sum(result);
+lbp_code = lbpMapping(lbp_map, 8, 'u2');
+lbp_hist = lbpHist(lbp_code);
