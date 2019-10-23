@@ -16,4 +16,10 @@ else
 end
 disp('Data Loaded!');
 
-%% 
+%% Get LBP features.
+addpath('./LBP/');
+img = traindata{1};
+lbp_map = lbp(img, 1, 8);
+lbp_map = lbpMapping(lbp_map, 8, 'u2');
+result=hist(result(:),0:(bins-1));
+result=result/sum(result);
