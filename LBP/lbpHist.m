@@ -6,10 +6,10 @@ function [ lbp_hist ] = lbpHist( lbp_code )
 % Date:   2019-10-22.
 
 lbp_code_d = double(lbp_code);
-valmax = max(max(lbp_code_d));
+list = unique(lbp_code_d);
 
-lbp_hist = hist(lbp_code_d(:), 0:valmax);  % calculate histogram.
-lbp_hist = lbp_hist / sum(lbp_hist);         % normalized histogram.
+lbp_hist = hist(lbp_code_d(:), list);  % calculate histogram.
+lbp_hist = lbp_hist / sum(lbp_hist);   % normalized histogram.
 
 end
 
