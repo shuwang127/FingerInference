@@ -1,12 +1,11 @@
 clear; clc;
 close all;
 
-%% Set the dataset information.
+%% Load training data and testing data.
+% Set the dataset information.
 datapath = './LivDet 2017';
 scanner = 'GreenBit';
 matpath = ['./Data/', scanner, '.mat'];
-
-%% Load training data and testing data.
 if ~exist(matpath, 'file')
     [ traindata, trainlabel, ~, ~ ] = readData( datapath, scanner, 'train' );
     [ testdata, testlabel, ~, ~ ] = readData( datapath, scanner, 'test' );
@@ -21,9 +20,9 @@ disp('Data Loaded!');
 addpath('./LBP/');
 radius = 1;
 neighbor = 8;
-lbpType = 'riu2';
+lbpType = 'ri';
 % Load LBP features.
-lbppath = ['./Data/LBP_', num2str(radius), '_', num2str(neighbor), '_', lbpType, '.mat'];
+lbppath = ['./Data/', scanner, '_LBP_', num2str(radius), '_', num2str(neighbor), '_', lbpType, '.mat'];
 if ~exist(lbppath, 'file')
     [train_lbp, test_lbp] = lbpFeature(traindata, testdata, radius, neighbor, lbpType);
     save(lbppath, 'train_lbp', 'test_lbp');
@@ -37,7 +36,7 @@ trainfeat = [train_lbp];
 testfeat = [test_lbp];
 
 %% Classification.
-SVMSTRUCT = svmtrain(trainlabel, trainfeat);
+SVMSTRUCT = svmtrain(trainlabel, trainfeat, '-t 3');
 % Evaluation
 [trainpredict, acc_train, ~] = svmpredict(trainlabel, trainfeat, SVMSTRUCT);
 [testpredict, acc_test, ~] = svmpredict(testlabel, testfeat, SVMSTRUCT);

@@ -3,4 +3,10 @@
 
 Note: 'Tenko' is just a project code.
 
-LBP_1_8_u2 SVM Train:75%, Test:58.8235%
+Features                Classifier      Training    Testing
+
+[GreenBit]
+LBP_1_8_*_ROI           SVM             75%         58.8235%
+
+[DigitalPersona]
+LBP_1_8_riu2_ROI        SVM             74.975%     61.7021%

@@ -51,7 +51,7 @@ for iuser = 1 : foldernum   % idx = iuser + 2
         usergender = userinfo{3};
     else
         userage = userinfo{3};
-        usergender = 1 - userinfo{2};   
+        usergender = num2str('1' - userinfo{2});   
     end
     % explore subfolder.
     userpath = [folderpath, username, '/Live/'];
