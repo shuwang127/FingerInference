@@ -8,7 +8,7 @@ function [ lbp_hist ] = lbpHist( lbp_code )
 lbp_code_d = double(lbp_code);
 list = unique(lbp_code_d);
 
-lbp_hist = hist(lbp_code_d(:), list);  % calculate histogram.
+lbp_hist = hist(lbp_code_d(:), [0:list(end-1), list(end)]);  % calculate histogram.
 lbp_hist = lbp_hist / sum(lbp_hist);   % normalized histogram.
 
 end
