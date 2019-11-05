@@ -1,5 +1,6 @@
 clear; clc;
 close all;
+addpath(genpath(pwd));
 
 %% Load training data and testing data.
 % Set the dataset information.
@@ -17,10 +18,9 @@ disp('Data Loaded!');
 
 %% Get LBP features.
 % Set LBP parameters.
-addpath('./LBP/');
 radius = 1;
 neighbor = 8;
-lbpType = 'ri';
+lbpType = 'riu2';
 % Load LBP features.
 lbppath = ['./Data/', scanner, '_LBP_', num2str(radius), '_', num2str(neighbor), '_', lbpType, '.mat'];
 if ~exist(lbppath, 'file')
@@ -33,10 +33,17 @@ disp('LBP Feature Extracted!');
 
 %% Emsemble features.
 trainfeat = [train_lbp];
-testfeat = [test_lbp];
+testfeat  = [test_lbp];
+% Shuffle data.
+trainidx = randperm(numel(trainlabel));
+testidx  = randperm(numel(testlabel));
+trainfeat = trainfeat(trainidx, :);
+trainlabel = trainlabel(trainidx, :);
+testfeat = testfeat(testidx, :);
+testlabel = testlabel(testidx, :);
 
 %% Classification.
-SVMSTRUCT = svmtrain(trainlabel, trainfeat, '-t 3');
+SVMSTRUCT = svmtrain(trainlabel, trainfeat);
 % Evaluation
 [trainpredict, acc_train, ~] = svmpredict(trainlabel, trainfeat, SVMSTRUCT);
 [testpredict, acc_test, ~] = svmpredict(testlabel, testfeat, SVMSTRUCT);
