@@ -2,6 +2,7 @@
 ## Gender Inference from Fingerprint Images
 
 Note: 'Tenko' is just a project code.
+The project needs to add libsvm library.
 
 Features                Classifier      Training    Testing
 
