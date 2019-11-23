@@ -22,7 +22,7 @@ for i = 1 : length(traindata)
     lbp_map = lbp(img(:,:,1), radius, neighbor);
     lbp_code = lbpMapping(lbp_map, neighbor, lbpType);
     % Get the fingerprint mark.
-    se = offsetstrel('ball', 7, 7);
+    se = strel('ball', 7, 7);
     img_eroded = imerode(img(:,:,1), se);
     img_eroded_bw = im2bw(img_eroded);
     % Resize the mark.
@@ -41,6 +41,9 @@ for i = 1 : length(traindata)
 end
 % Get LBP features for testing set.
 test_lbp = [];
+if isempty(testdata)
+    return;
+end
 for i = 1 : length(testdata)
     % Read i-th image.
     img = testdata{i};
@@ -48,7 +51,7 @@ for i = 1 : length(testdata)
     lbp_map = lbp(img(:,:,1), radius, neighbor);
     lbp_code = lbpMapping(lbp_map, neighbor, lbpType);
     % Get the fingerprint mark.
-    se = offsetstrel('ball', 7, 7);
+    se = strel('ball', 7, 7);
     img_eroded = imerode(img(:,:,1), se);
     img_eroded_bw = im2bw(img_eroded);
     % Resize the mark.
