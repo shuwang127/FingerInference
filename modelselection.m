@@ -38,7 +38,7 @@ for i = 1 : iternum
     [ p_train_lpq, ~ ] = elmforward( trainfeat, trainlabel, W, b, o, 'sig');
     [ p_test_lpq, ~ ] = elmforward( testfeat, testlabel, W, b, o, 'sig');
     
-    % LPQ
+    % BSIF
     trainfeat = data_bsif(trainidx, :);
     testfeat = data_bsif(testidx, :);
     [~, ~, TrainAcc, TestAcc, W, b, o] ...
@@ -48,7 +48,7 @@ for i = 1 : iternum
     [ p_train_bsif, ~ ] = elmforward( trainfeat, trainlabel, W, b, o, 'sig');
     [ p_test_bsif, ~ ] = elmforward( testfeat, testlabel, W, b, o, 'sig');
     
-    % LPQ
+    % DWT
     trainfeat = data_dwt(trainidx, :);
     testfeat = data_dwt(testidx, :);
     [~, ~, TrainAcc, TestAcc, W, b, o] ...
