@@ -5,6 +5,7 @@ addpath('_LPQ');
 addpath('_BSIF');
 addpath('_DWT');
 addpath('_ELM');
+addpath('_KNN');
 addpath(genpath('_Utility'));
 addpath('libsvm');
 addpath('libsvm/matlab/');
@@ -69,7 +70,7 @@ end
 disp('DWT Feature Extracted!');
 
 %% Emsemble features.
-feat = [data_bsif];
+feat = [data_dwt];
 % Shuffle data.
 trainrate = 0.8;
 trainnum = ceil(trainrate * numel(label));
@@ -97,7 +98,7 @@ save ./Model/SVMmodel.mat SVMSTRUCT;
 
 %% ELM Classification.
 [~, ~, TrainAcc, TestAcc, W, b, o] ...
-    = elm([trainlabel, trainfeat], [testlabel, testfeat], 1, 37, 'sig');
+    = elm([trainlabel, trainfeat], [testlabel, testfeat], 1, 25, 'sig');
 disp(['=============================================']);
 disp(['ELM Training Acc: ', num2str(100 * TrainAcc), '%']);
 disp(['ELM Testing Acc: ', num2str(100 * TestAcc), '%']);
@@ -105,4 +106,7 @@ disp(['ELM Testing Acc: ', num2str(100 * TestAcc), '%']);
 save ./Model/ELMmodel.mat W b o;
 
 %% 
-
+[~, acc] = knn(trainfeat, trainlabel, testfeat, testlabel);
+disp(['=============================================']);
+disp(['KNN algorithm with K = 1']);
+disp(['The testing accuracy: ', num2str(acc*100), '%']);
