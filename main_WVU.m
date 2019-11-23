@@ -6,6 +6,7 @@ addpath('_BSIF');
 addpath('_DWT');
 addpath('_ELM');
 addpath('_KNN');
+addpath('_PLA');
 addpath(genpath('_Utility'));
 addpath('libsvm');
 addpath('libsvm/matlab/');
@@ -105,8 +106,14 @@ disp(['ELM Testing Acc: ', num2str(100 * TestAcc), '%']);
 % Save the model
 save ./Model/ELMmodel.mat W b o;
 
-%% 
+%% KNN
 [~, acc] = knn(trainfeat, trainlabel, testfeat, testlabel);
 disp(['=============================================']);
 disp(['KNN algorithm with K = 1']);
 disp(['The testing accuracy: ', num2str(acc*100), '%']);
+
+%% PLA
+[~, trainacc, testacc, ~] = PLA(trainfeat, trainlabel, testfeat, testlabel);
+disp(['=============================================']);
+disp(['PLA Training Acc: ', num2str(100 * trainacc), '%']);
+disp(['PLA Testing Acc: ', num2str(100 * testacc), '%']);
