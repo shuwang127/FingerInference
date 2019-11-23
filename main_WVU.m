@@ -7,6 +7,7 @@ addpath('_DWT');
 addpath('_ELM');
 addpath('_KNN');
 addpath('_PLA');
+addpath('_DT');
 addpath(genpath('_Utility'));
 addpath('libsvm');
 addpath('libsvm/matlab/');
@@ -71,7 +72,7 @@ end
 disp('DWT Feature Extracted!');
 
 %% Emsemble features.
-feat = [data_dwt];
+feat = [data_lpq, data_bsif, data_dwt];
 % Shuffle data.
 trainrate = 0.8;
 trainnum = ceil(trainrate * numel(label));
@@ -106,14 +107,26 @@ disp(['ELM Testing Acc: ', num2str(100 * TestAcc), '%']);
 % Save the model
 save ./Model/ELMmodel.mat W b o;
 
-%% KNN
+%% KNN Classification.
 [~, acc] = knn(trainfeat, trainlabel, testfeat, testlabel);
 disp(['=============================================']);
 disp(['KNN algorithm with K = 1']);
 disp(['The testing accuracy: ', num2str(acc*100), '%']);
 
-%% PLA
-[~, trainacc, testacc, ~] = PLA(trainfeat, trainlabel, testfeat, testlabel);
+%% PLA Classification.
+[w, trainacc, testacc, ~] = PLA(trainfeat, trainlabel, testfeat, testlabel);
 disp(['=============================================']);
 disp(['PLA Training Acc: ', num2str(100 * trainacc), '%']);
 disp(['PLA Testing Acc: ', num2str(100 * testacc), '%']);
+% Save the model
+save ./Model/PLAmodel.mat w;
+
+%% CART Classification.
+[tree, trainacc, testacc, predicts ] = DT(trainfeat, trainlabel, testfeat, testlabel);
+disp(['=============================================']);
+disp(['CART Training Acc: ', num2str(100 * trainacc), '%']);
+disp(['CART Testing Acc: ', num2str(100 * testacc), '%']);
+% Save the model
+save ./Model/DTmodel.mat tree;
+% Vtree = fitctree(trainfeat, trainlabel, 'CrossVal', 'on');
+% view(Vtree.Trained{1}, 'Mode', 'graph');
