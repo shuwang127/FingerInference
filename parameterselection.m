@@ -40,6 +40,7 @@ for k = 1 : 100
     end
 end
 
+%%
 train_stat = train_stat * 100 / iternum;
 test_stat = test_stat * 100 / iternum;
 plot(1:100, train_stat, 1:100, test_stat);
