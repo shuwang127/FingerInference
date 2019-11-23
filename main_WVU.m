@@ -1,7 +1,13 @@
 clear; clc;
 close all;
 addpath('_LBP');
+addpath('_LPQ');
 addpath('_BSIF');
+addpath('_DWT');
+addpath('_ELM');
+addpath(genpath('_Utility'));
+addpath('libsvm');
+addpath('libsvm/matlab/');
 
 %% Load training data and testing data.
 % Set the dataset information.
@@ -24,25 +30,59 @@ lbpType = 'riu2';
 % Load LBP features.
 lbppath = ['./Data/', scanner, '_LBP_', num2str(radius), '_', num2str(neighbor), '_', lbpType, '.mat'];
 if ~exist(lbppath, 'file')
-    [train_lbp, test_lbp] = lbpFeature(traindata, testdata, radius, neighbor, lbpType);
-    save(lbppath, 'train_lbp', 'test_lbp');
+    [data_lbp, ~] = lbpFeature(data, [], radius, neighbor, lbpType);
+    save(lbppath, 'data_lbp');
 else
     load(lbppath);
 end
 disp('LBP Feature Extracted!');
 
-%% Emsemble features.
-trainfeat = [train_lbp];
-testfeat  = [test_lbp];
-% Shuffle data.
-trainidx = randperm(numel(trainlabel));
-testidx  = randperm(numel(testlabel));
-trainfeat = trainfeat(trainidx, :);
-trainlabel = trainlabel(trainidx, :);
-testfeat = testfeat(testidx, :);
-testlabel = testlabel(testidx, :);
+%% Get LPQ features.
+lpqpath = ['./Data/', scanner, '_LPQ_5.mat'];
+if ~exist(lpqpath, 'file')
+    [data_lpq] = lpqFeature(data);
+    save(lpqpath, 'data_lpq');
+else
+    load(lpqpath);
+end
+disp('LPQ Feature Extracted!');
 
-%% Classification.
+%% Get BSIF features.
+bsifpath = ['./Data/', scanner, '_BSIF_11_8.mat'];
+if ~exist(bsifpath, 'file')
+    [data_bsif] = bsifFeature(data);
+    save(bsifpath, 'data_bsif');
+else
+    load(bsifpath);
+end
+disp('BSIF Feature Extracted!');
+
+%% Get DWT features.
+% Set DWT parameters.
+dwtpath = ['./Data/', scanner, '_DWT_5.mat'];
+if ~exist(dwtpath, 'file')
+    [data_dwt] = dwtFeature(data, 5);
+    save(dwtpath, 'data_dwt');
+else
+    load(dwtpath);
+end
+disp('DWT Feature Extracted!');
+
+%% Emsemble features.
+feat = [data_bsif];
+% Shuffle data.
+trainrate = 0.8;
+trainnum = ceil(trainrate * numel(label));
+idx = randperm(numel(label));
+trainidx = idx(1:trainnum);
+testidx = idx(trainnum+1:end);
+%
+trainfeat = feat(trainidx, :);
+trainlabel = label(trainidx, :);
+testfeat = feat(testidx, :);
+testlabel = label(testidx, :);
+
+%% SVM Classification.
 SVMSTRUCT = svmtrain(trainlabel, trainfeat);
 % Evaluation
 [trainpredict, acc_train, ~] = svmpredict(trainlabel, trainfeat, SVMSTRUCT);
@@ -50,7 +90,19 @@ SVMSTRUCT = svmtrain(trainlabel, trainfeat);
 accuracy_train = acc_train(1);
 accuracy_test = acc_test(1);
 disp(['=============================================']);
-disp(['Training Acc: ', num2str(accuracy_train), '%']);
-disp(['Testing Acc: ', num2str(accuracy_test), '%']);
+disp(['SVM Training Acc: ', num2str(accuracy_train), '%']);
+disp(['SVM Testing Acc: ', num2str(accuracy_test), '%']);
 % Save the model
 save ./Model/SVMmodel.mat SVMSTRUCT;
+
+%% ELM Classification.
+[~, ~, TrainAcc, TestAcc, W, b, o] ...
+    = elm([trainlabel, trainfeat], [testlabel, testfeat], 1, 37, 'sig');
+disp(['=============================================']);
+disp(['ELM Training Acc: ', num2str(100 * TrainAcc), '%']);
+disp(['ELM Testing Acc: ', num2str(100 * TestAcc), '%']);
+% Save the model
+save ./Model/ELMmodel.mat W b o;
+
+%% 
+

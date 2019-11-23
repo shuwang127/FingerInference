@@ -1,11 +1,11 @@
 clear; clc;
 close all;
-addpath(genpath(pwd));
+addpath('_LBP');
 
 %% Load training data and testing data.
 % Set the dataset information.
 datapath = './LivDet 2017';
-scanner = 'GreenBit';
+scanner = 'Orcathus';
 matpath = ['./Data/', scanner, '.mat'];
 if ~exist(matpath, 'file')
     [ traindata, trainlabel, ~, ~ ] = readData_LivDet( datapath, scanner, 'train' );
