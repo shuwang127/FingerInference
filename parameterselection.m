@@ -15,7 +15,7 @@ feat = [data_dwt];
 %%
 train_stat = zeros(1, 100); 
 test_stat = zeros(1, 100); 
-iternum = 1000;
+iternum = 100;
 for k = 1 : 100
     for i = 1 : iternum
         % Shuffle data and get index.

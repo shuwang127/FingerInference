@@ -15,7 +15,8 @@ train_lpq = []; test_lpq = [];
 train_bsif = []; test_bsif = [];
 train_dwt = []; test_dwt = [];
 train_all = []; test_all = [];
-iternum = 100;
+pre_acc = 0;
+iternum = 10000;
 for i = 1 : iternum
     % Shuffle data and get index.
     trainrate = 0.8;
@@ -37,6 +38,7 @@ for i = 1 : iternum
     test_lpq(end+1) = TestAcc;
     [ p_train_lpq, ~ ] = elmforward( trainfeat, trainlabel, W, b, o, 'sig');
     [ p_test_lpq, ~ ] = elmforward( testfeat, testlabel, W, b, o, 'sig');
+    m1.W = W; m1.b = b; m1.o = o;
     
     % BSIF
     trainfeat = data_bsif(trainidx, :);
@@ -47,6 +49,7 @@ for i = 1 : iternum
     test_bsif(end+1) = TestAcc;
     [ p_train_bsif, ~ ] = elmforward( trainfeat, trainlabel, W, b, o, 'sig');
     [ p_test_bsif, ~ ] = elmforward( testfeat, testlabel, W, b, o, 'sig');
+    m2.W = W; m2.b = b; m2.o = o;
     
     % DWT
     trainfeat = data_dwt(trainidx, :);
@@ -57,12 +60,19 @@ for i = 1 : iternum
     test_dwt(end+1) = TestAcc;
     [ p_train_dwt, ~ ] = elmforward( trainfeat, trainlabel, W, b, o, 'sig');
     [ p_test_dwt, ~ ] = elmforward( testfeat, testlabel, W, b, o, 'sig');
+    m3.W = W; m3.b = b; m3.o = o;
     
     % Ensemble
     p_train = p_train_lpq + p_train_bsif + p_train_dwt;
     p_train = double(p_train >= 2);
     p_test = p_test_lpq + p_test_bsif + p_test_dwt;
     p_test = double(p_test >= 2);
+    
+    all_acc = sum([p_test;p_train] == [testlabel;trainlabel]) / length(label);
+    if all_acc > pre_acc
+        pre_acc = all_acc;
+        save ./Model/wModel.mat m1 m2 m3 idx
+    end
     
     train_all(end+1) = sum(p_train == trainlabel) / length(trainlabel);
     test_all(end+1) = sum(p_test == testlabel) / length(testlabel);
