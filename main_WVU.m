@@ -86,17 +86,17 @@ testfeat = feat(testidx, :);
 testlabel = label(testidx, :);
 
 %% SVM Classification.
-SVMSTRUCT = svmtrain(trainlabel, trainfeat);
+SVMModel = fitcsvm(trainfeat, trainlabel);
 % Evaluation
-[trainpredict, acc_train, ~] = svmpredict(trainlabel, trainfeat, SVMSTRUCT);
-[testpredict, acc_test, ~] = svmpredict(testlabel, testfeat, SVMSTRUCT);
-accuracy_train = acc_train(1);
-accuracy_test = acc_test(1);
+trainpredict = predict(SVMModel, trainfeat);
+testpredict = predict(SVMModel, testfeat);
+accuracy_train = sum(trainlabel == trainpredict) / length(trainlabel);
+accuracy_test = sum(testlabel == testpredict) / length(testlabel);
 disp(['=============================================']);
-disp(['SVM Training Acc: ', num2str(accuracy_train), '%']);
-disp(['SVM Testing Acc: ', num2str(accuracy_test), '%']);
+disp(['SVM Training Acc: ', num2str(accuracy_train*100), '%']);
+disp(['SVM Testing Acc: ', num2str(accuracy_test*100), '%']);
 % Save the model
-save ./Model/SVMmodel.mat SVMSTRUCT;
+save ./Model/SVMmodel.mat SVMModel;
 
 %% ELM Classification.
 [~, ~, TrainAcc, TestAcc, W, b, o] ...

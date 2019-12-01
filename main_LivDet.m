@@ -5,7 +5,7 @@ addpath('_LBP');
 %% Load training data and testing data.
 % Set the dataset information.
 datapath = './LivDet 2017';
-scanner = 'Orcathus';
+scanner = 'DigitalPersona';
 matpath = ['./Data/', scanner, '.mat'];
 if ~exist(matpath, 'file')
     [ traindata, trainlabel, ~, ~ ] = readData_LivDet( datapath, scanner, 'train' );
@@ -43,14 +43,14 @@ testfeat = testfeat(testidx, :);
 testlabel = testlabel(testidx, :);
 
 %% Classification.
-SVMSTRUCT = svmtrain(trainlabel, trainfeat);
+SVMModel = fitcsvm(trainfeat, trainlabel);
 % Evaluation
-[trainpredict, acc_train, ~] = svmpredict(trainlabel, trainfeat, SVMSTRUCT);
-[testpredict, acc_test, ~] = svmpredict(testlabel, testfeat, SVMSTRUCT);
-accuracy_train = acc_train(1);
-accuracy_test = acc_test(1);
+trainpredict = predict(SVMModel, trainfeat);
+testpredict = predict(SVMModel, testfeat);
+accuracy_train = sum(trainlabel == trainpredict) / length(trainlabel);
+accuracy_test = sum(testlabel == testpredict) / length(testlabel);
 disp(['=============================================']);
-disp(['Training Acc: ', num2str(accuracy_train), '%']);
-disp(['Testing Acc: ', num2str(accuracy_test), '%']);
+disp(['Training Acc: ', num2str(accuracy_train*100), '%']);
+disp(['Testing Acc: ', num2str(accuracy_test*100), '%']);
 % Save the model
-save ./Model/SVMmodel.mat SVMSTRUCT;
+save ./Model/SVMmodel.mat SVMModel;
