@@ -22,7 +22,7 @@ To verify the effectiveness of these three fingerprint features, we utilize the 
 
 Although the weak classifiers are three-layer fully-connected neural networks, they have different parameters in the implementation. We test the relationship between model parameters (i.e. neuron number of hidden layer) and testing accuracy. The parameters are determined under the highest testing accuracy. The parameters of 3 classifiers are 40, 30, and 22 respectively.
 
-![](./pic/para.png)
+<img src="./pic/para.png" width=512 />
 
 ### Classification Performance
 
@@ -30,7 +30,6 @@ Because the training and testing data are selected randomly, the results of each
 
 We can find that the ensemble voting model can achieve 80.3\% testing accuracy on average, which is higher than that of any other single weak classifier. The cross-sensor testing accuracy can also reach 67.48\%. The results show the effectiveness of the ensemble voting model on gender inference task.
 
-![](./pic/acc.png)
-
+<img src="./pic/acc.png" width=512 />
 
 2019-12-01
